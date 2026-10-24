@@ -7,8 +7,9 @@
     android:paddingEnd="24dp"
     android:paddingTop="12dp"
     android:paddingBottom="12dp"
-    android:gravity="start"
+    android:gravity="center"
+    android:textAlignment="center"
     android:text="歌词内容"
     android:textSize="18sp"
     android:textColor="#59FFFFFF"
-    android:lineSpacingExtra="4dp" />
+    android:lineSpacingExtra="6dp" />

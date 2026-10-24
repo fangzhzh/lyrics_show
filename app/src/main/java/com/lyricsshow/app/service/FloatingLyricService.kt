@@ -29,6 +29,7 @@ import com.lyricsshow.app.MainActivity
 import com.lyricsshow.app.R
 import com.lyricsshow.app.model.LrcLine
 import com.lyricsshow.app.model.LyricManager
+import com.lyricsshow.app.ui.CenterLayoutManager
 import com.lyricsshow.app.ui.LyricAdapter
 import com.lyricsshow.app.ui.SearchLyricDialog
 import com.lyricsshow.app.util.LocalDemoPlayer
@@ -84,8 +85,17 @@ class FloatingLyricService : Service() {
     private lateinit var btnLargePlayPause: ImageView
 
     private var userIsScrollingLyrics = false
+    private var lastScrolledIndex = -1
     private val mainHandler = Handler(Looper.getMainLooper())
     private lateinit var prefs: SharedPreferences
+
+    private val resumeAutoScrollRunnable = Runnable {
+        userIsScrollingLyrics = false
+        if (LyricManager.currentLineIndex in 0 until largeLyricAdapter.itemCount) {
+            lastScrolledIndex = LyricManager.currentLineIndex
+            rvLargeLyrics.smoothScrollToPosition(LyricManager.currentLineIndex)
+        }
+    }
 
     private val notificationUpdateRunnable = Runnable {
         try {
@@ -111,8 +121,10 @@ class FloatingLyricService : Service() {
                 if (currentMode == FloatMode.LARGE) {
                     largeLyricAdapter.setCurrentIndex(currentIndex)
                     if (!userIsScrollingLyrics && currentIndex in 0 until largeLyricAdapter.itemCount) {
-                        val scrollTarget = (currentIndex - 2).coerceAtLeast(0)
-                        rvLargeLyrics.smoothScrollToPosition(scrollTarget)
+                        if (currentIndex != lastScrolledIndex) {
+                            lastScrolledIndex = currentIndex
+                            rvLargeLyrics.smoothScrollToPosition(currentIndex)
+                        }
                     }
                     tvLargeProgressTime.text = "${formatTime(positionMs)} / ${formatTime(totalMs)}"
                 }
@@ -122,6 +134,15 @@ class FloatingLyricService : Service() {
         override fun onLyricsLoaded(lines: List<LrcLine>) {
             mainHandler.post {
                 largeLyricAdapter.setLyrics(lines)
+                lastScrolledIndex = -1
+                if (currentMode == FloatMode.LARGE && LyricManager.currentLineIndex in lines.indices) {
+                    rvLargeLyrics.post {
+                        (rvLargeLyrics.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(
+                            LyricManager.currentLineIndex,
+                            (rvLargeLyrics.height / 2) - 30
+                        )
+                    }
+                }
             }
         }
 
@@ -136,6 +157,7 @@ class FloatingLyricService : Service() {
 
         override fun onTrackChanged(title: String, artist: String) {
             mainHandler.post {
+                lastScrolledIndex = -1
                 val t = if (title.isNotBlank()) title else "浮光歌词"
                 val a = if (artist.isNotBlank()) artist else "等待音乐播放..."
                 tvLargeSongTitle.text = t
@@ -208,15 +230,41 @@ class FloatingLyricService : Service() {
             tvLargeOffset = floatingView!!.findViewById(R.id.tvLargeOffset)
             btnLargePlayPause = floatingView!!.findViewById(R.id.btnLargePlayPause)
 
-            // 设置 RecyclerView
-            rvLargeLyrics.layoutManager = LinearLayoutManager(this)
+            // 设置 RecyclerView 居中滚动与上下边距提前量
+            rvLargeLyrics.layoutManager = CenterLayoutManager(this)
+            rvLargeLyrics.clipToPadding = false
+            rvLargeLyrics.addOnLayoutChangeListener { _, _, top, _, bottom, _, oldTop, _, oldBottom ->
+                val newH = bottom - top
+                val oldH = oldBottom - oldTop
+                if (newH > 0 && newH != oldH) {
+                    val halfPadding = (newH / 2) - 30
+                    if (halfPadding > 0 && (rvLargeLyrics.paddingTop != halfPadding || rvLargeLyrics.paddingBottom != halfPadding)) {
+                        rvLargeLyrics.setPadding(0, halfPadding, 0, halfPadding)
+                    }
+                }
+            }
+
             largeLyricAdapter = LyricAdapter { clickedLine ->
+                userIsScrollingLyrics = false
+                mainHandler.removeCallbacks(resumeAutoScrollRunnable)
                 seekTo(clickedLine.timeMs)
+                val idx = largeLyricAdapter.lines.indexOf(clickedLine)
+                if (idx >= 0) {
+                    lastScrolledIndex = idx
+                    rvLargeLyrics.smoothScrollToPosition(idx)
+                }
             }
             rvLargeLyrics.adapter = largeLyricAdapter
+
             rvLargeLyrics.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    userIsScrollingLyrics = (newState == RecyclerView.SCROLL_STATE_DRAGGING)
+                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                        userIsScrollingLyrics = true
+                        mainHandler.removeCallbacks(resumeAutoScrollRunnable)
+                    } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        mainHandler.removeCallbacks(resumeAutoScrollRunnable)
+                        mainHandler.postDelayed(resumeAutoScrollRunnable, 2500)
+                    }
                 }
             })
 
@@ -293,9 +341,25 @@ class FloatingLyricService : Service() {
                     lp.x = 0
                     lp.y = 0
 
-                    // 刷新当前歌词列表
+                    // 刷新当前歌词列表并居中高亮当前行
                     largeLyricAdapter.setLyrics(LyricManager.lyricLines)
                     largeLyricAdapter.setCurrentIndex(LyricManager.currentLineIndex)
+                    lastScrolledIndex = -1
+                    rvLargeLyrics.post {
+                        val h = rvLargeLyrics.height
+                        if (h > 0) {
+                            val halfPadding = (h / 2) - 30
+                            if (halfPadding > 0 && (rvLargeLyrics.paddingTop != halfPadding || rvLargeLyrics.paddingBottom != halfPadding)) {
+                                rvLargeLyrics.setPadding(0, halfPadding, 0, halfPadding)
+                            }
+                        }
+                        if (LyricManager.currentLineIndex in LyricManager.lyricLines.indices) {
+                            (rvLargeLyrics.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(
+                                LyricManager.currentLineIndex,
+                                (h / 2) - 30
+                            )
+                        }
+                    }
                 }
             }
             windowManager?.updateViewLayout(floatingView, lp)

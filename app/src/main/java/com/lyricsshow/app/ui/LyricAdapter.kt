@@ -14,7 +14,9 @@ class LyricAdapter(
     private val onLineClick: (LrcLine) -> Unit
 ) : RecyclerView.Adapter<LyricAdapter.LyricViewHolder>() {
 
-    private var lines: List<LrcLine> = emptyList()
+    var lines: List<LrcLine> = emptyList()
+        private set
+
     var currentIndex: Int = -1
         private set
 

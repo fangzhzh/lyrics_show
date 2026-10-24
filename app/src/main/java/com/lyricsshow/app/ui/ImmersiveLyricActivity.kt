@@ -31,10 +31,20 @@ class ImmersiveLyricActivity : AppCompatActivity() {
     private lateinit var btnToggleFloating: TextView
 
     private var userIsScrolling = false
+    private var lastScrolledIndex = -1
+
+    private val resumeAutoScrollRunnable = Runnable {
+        userIsScrolling = false
+        if (LyricManager.currentLineIndex in 0 until adapter.itemCount) {
+            lastScrolledIndex = LyricManager.currentLineIndex
+            rvLyrics.smoothScrollToPosition(LyricManager.currentLineIndex)
+        }
+    }
 
     private val lyricListener = object : LyricManager.LyricListener {
         override fun onTrackChanged(title: String, artist: String) {
             runOnUiThread {
+                lastScrolledIndex = -1
                 tvImmTitle.text = if (title.isBlank()) "浮光歌词" else title
                 tvImmArtist.text = if (artist.isBlank()) "等待音乐播放..." else artist
             }
@@ -43,6 +53,15 @@ class ImmersiveLyricActivity : AppCompatActivity() {
         override fun onLyricsLoaded(lines: List<LrcLine>) {
             runOnUiThread {
                 adapter.setLyrics(lines)
+                lastScrolledIndex = -1
+                if (LyricManager.currentLineIndex in lines.indices) {
+                    rvLyrics.post {
+                        layoutManager.scrollToPositionWithOffset(
+                            LyricManager.currentLineIndex,
+                            (rvLyrics.height / 2) - 30
+                        )
+                    }
+                }
             }
         }
 
@@ -64,8 +83,10 @@ class ImmersiveLyricActivity : AppCompatActivity() {
             runOnUiThread {
                 adapter.setCurrentIndex(currentIndex)
                 if (!userIsScrolling && currentIndex in 0 until adapter.itemCount) {
-                    val targetPos = (currentIndex - 2).coerceAtLeast(0)
-                    rvLyrics.smoothScrollToPosition(targetPos)
+                    if (currentIndex != lastScrolledIndex) {
+                        lastScrolledIndex = currentIndex
+                        rvLyrics.smoothScrollToPosition(currentIndex)
+                    }
                 }
 
                 tvProgressTime.text = "${formatTime(positionMs)} / ${formatTime(totalMs)}"
@@ -90,15 +111,33 @@ class ImmersiveLyricActivity : AppCompatActivity() {
         btnImmPlayPause = findViewById(R.id.btnImmPlayPause)
         btnToggleFloating = findViewById(R.id.btnToggleFloating)
 
-        layoutManager = LinearLayoutManager(this)
+        layoutManager = CenterLayoutManager(this)
         rvLyrics.layoutManager = layoutManager
+        rvLyrics.clipToPadding = false
+        rvLyrics.addOnLayoutChangeListener { _, _, top, _, bottom, _, oldTop, _, oldBottom ->
+            val newH = bottom - top
+            val oldH = oldBottom - oldTop
+            if (newH > 0 && newH != oldH) {
+                val halfPadding = (newH / 2) - 30
+                if (halfPadding > 0 && (rvLyrics.paddingTop != halfPadding || rvLyrics.paddingBottom != halfPadding)) {
+                    rvLyrics.setPadding(0, halfPadding, 0, halfPadding)
+                }
+            }
+        }
 
         adapter = LyricAdapter { clickedLine ->
             // 点击歌词行进行进度跳转
+            userIsScrolling = false
+            window.decorView.removeCallbacks(resumeAutoScrollRunnable)
             if (LocalDemoPlayer.isDemoPlaying()) {
                 LocalDemoPlayer.seekTo(clickedLine.timeMs)
             } else {
                 MediaListenerService.seekTo(clickedLine.timeMs)
+            }
+            val idx = adapter.lines.indexOf(clickedLine)
+            if (idx >= 0) {
+                lastScrolledIndex = idx
+                rvLyrics.smoothScrollToPosition(idx)
             }
         }
         rvLyrics.adapter = adapter
@@ -106,7 +145,13 @@ class ImmersiveLyricActivity : AppCompatActivity() {
         // 监听用户手指触摸滚动，避免干扰自动滚动
         rvLyrics.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                userIsScrolling = (newState == RecyclerView.SCROLL_STATE_DRAGGING)
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    userIsScrolling = true
+                    window.decorView.removeCallbacks(resumeAutoScrollRunnable)
+                } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    window.decorView.removeCallbacks(resumeAutoScrollRunnable)
+                    window.decorView.postDelayed(resumeAutoScrollRunnable, 2500)
+                }
             }
         })
 
