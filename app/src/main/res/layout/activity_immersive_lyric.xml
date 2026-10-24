@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#13141F"
+    android:fitsSystemWindows="true">
+
+    <!-- 顶部状态栏 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_circle_ripple"
+            android:padding="6dp"
+            android:src="@drawable/ic_close"
+            android:contentDescription="返回" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvImmTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="浮光歌词"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/tvImmArtist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="等待音乐播放..."
+                android:textColor="#80FFFFFF"
+                android:textSize="13sp"
+                android:singleLine="true"
+                android:ellipsize="end" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/btnImmSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_floating_controls"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:text="🔍 搜歌词"
+            android:textColor="#E0E0E0"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/btnToggleFloating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_floating_controls"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:text="悬浮窗"
+            android:textColor="#64B5F6"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- 沉浸式垂直歌词列表 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvLyrics"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingTop="80dp"
+        android:paddingBottom="80dp"
+        android:scrollbars="none" />
+
+    <!-- 歌词微调与进度区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp">
+
+        <TextView
+            android:id="@+id/tvProgressTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="00:00 / 00:00"
+            android:textColor="#80FFFFFF"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/btnOffsetMinus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:text="-0.5s"
+            android:textColor="#9E9E9E"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvOffsetStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:text="微调"
+            android:textColor="#2196F3"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/btnOffsetPlus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:text="+0.5s"
+            android:textColor="#9E9E9E"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- 底部控制栏 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="#1A1C29">
+
+        <ImageView
+            android:id="@+id/btnImmPrev"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_circle_ripple"
+            android:padding="10dp"
+            android:src="@drawable/ic_skip_previous"
+            android:contentDescription="上一首" />
+
+        <ImageView
+            android:id="@+id/btnImmPlayPause"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/bg_circle_ripple"
+            android:padding="12dp"
+            android:src="@drawable/ic_play"
+            android:contentDescription="播放/暂停" />
+
+        <ImageView
+            android:id="@+id/btnImmNext"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_circle_ripple"
+            android:padding="10dp"
+            android:src="@drawable/ic_skip_next"
+            android:contentDescription="下一首" />
+
+    </LinearLayout>
+
+</LinearLayout>

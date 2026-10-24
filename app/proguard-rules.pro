@@ -1,0 +1,1 @@
+# LyricsShow Proguard rules

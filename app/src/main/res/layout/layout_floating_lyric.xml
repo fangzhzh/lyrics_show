@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/floatingRoot"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <!-- ============================================== -->
+    <!-- 模式 3: 小圈圈模式 (Circle Mode - 48dp x 48dp) -->
+    <!-- ============================================== -->
+    <FrameLayout
+        android:id="@+id/viewCircleMode"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_floating_bubble"
+        android:elevation="10dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_lyrics"
+            android:contentDescription="展开一行歌词" />
+    </FrameLayout>
+
+    <!-- ============================================== -->
+    <!-- 模式 1: 一行模式 (Single-Line Mode - 极简胶囊) -->
+    <!-- ============================================== -->
+    <LinearLayout
+        android:id="@+id/viewSingleLineMode"
+        android:layout_width="wrap_content"
+        android:layout_height="46dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_floating_capsule"
+        android:paddingStart="12dp"
+        android:paddingEnd="8dp"
+        android:elevation="8dp"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_lyrics"
+            android:contentDescription="图标" />
+
+        <!-- 当前一行歌词 -->
+        <TextView
+            android:id="@+id/tvSingleLyric"
+            android:layout_width="wrap_content"
+            android:minWidth="130dp"
+            android:maxWidth="230dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:text="浮光歌词 - 等待播放"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- 切换为全屏/很大模式 -->
+        <ImageView
+            android:id="@+id/btnSingleToLarge"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:background="@drawable/bg_circle_ripple"
+            android:padding="5dp"
+            android:src="@drawable/ic_fullscreen"
+            android:contentDescription="切换全屏很大模式" />
+
+        <!-- 缩小为小圈圈 -->
+        <ImageView
+            android:id="@+id/btnSingleToCircle"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="2dp"
+            android:background="@drawable/bg_circle_ripple"
+            android:padding="5dp"
+            android:src="@drawable/ic_minimize"
+            android:contentDescription="缩小为小圈圈" />
+
+        <!-- 播放/暂停 -->
+        <ImageView
+            android:id="@+id/btnSinglePlayPause"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="2dp"
+            android:background="@drawable/bg_circle_ripple"
+            android:padding="5dp"
+            android:src="@drawable/ic_play"
+            android:contentDescription="播放/暂停" />
+
+        <!-- 关闭 -->
+        <ImageView
+            android:id="@+id/btnSingleClose"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="2dp"
+            android:background="@drawable/bg_circle_ripple"
+            android:padding="5dp"
+            android:src="@drawable/ic_close"
+            android:contentDescription="关闭" />
+
+    </LinearLayout>
+
+    <!-- ============================================== -->
+    <!-- 模式 2: 全屏 / 很大模式 (Large Floating Window) -->
+    <!-- ============================================== -->
+    <LinearLayout
+        android:id="@+id/viewLargeMode"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/bg_floating_large"
+        android:padding="16dp"
+        android:elevation="12dp"
+        android:visibility="gone">
+
+        <!-- 顶部标题与控制栏 -->
+        <LinearLayout
+            android:id="@+id/largeHeaderBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="10dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_lyrics"
+                android:contentDescription="图标" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvLargeSongTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="浮光歌词"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:singleLine="true"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/tvLargeSongArtist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="等待音乐播放..."
+                    android:textColor="#80FFFFFF"
+                    android:textSize="12sp"
+                    android:singleLine="true"
+                    android:ellipsize="end" />
+            </LinearLayout>
+
+            <!-- 切换为一行模式 -->
+            <ImageView
+                android:id="@+id/btnLargeToSingle"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/bg_circle_ripple"
+                android:padding="6dp"
+                android:src="@drawable/ic_single_line"
+                android:contentDescription="切为一行模式" />
+
+            <!-- 缩为小圈圈 -->
+            <ImageView
+                android:id="@+id/btnLargeToCircle"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/bg_circle_ripple"
+                android:padding="6dp"
+                android:src="@drawable/ic_minimize"
+                android:contentDescription="缩为小圈圈" />
+
+            <!-- 手动搜歌词 -->
+            <TextView
+                android:id="@+id/btnLargeSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/bg_floating_controls"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="搜歌词"
+                android:textColor="#90CAF9"
+                android:textSize="11sp" />
+
+            <!-- 锁定防误触 -->
+            <ImageView
+                android:id="@+id/btnLargeLock"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/bg_circle_ripple"
+                android:padding="6dp"
+                android:src="@drawable/ic_lock_outline"
+                android:contentDescription="锁定防误触" />
+
+            <!-- 关闭 -->
+            <ImageView
+                android:id="@+id/btnLargeClose"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/bg_circle_ripple"
+                android:padding="6dp"
+                android:src="@drawable/ic_close"
+                android:contentDescription="关闭" />
+
+        </LinearLayout>
+
+        <!-- 歌词垂直多行滚动列表 (全屏/很大模式核心) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvLargeLyrics"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingTop="30dp"
+            android:paddingBottom="30dp"
+            android:scrollbars="none" />
+
+        <!-- 底部微调与进度区域 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp">
+
+            <TextView
+                android:id="@+id/tvLargeProgressTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="00:00 / 00:00"
+                android:textColor="#80FFFFFF"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/btnLargeOffsetMinus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="-0.5s"
+                android:textColor="#80FFFFFF"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvLargeOffset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="微调"
+                android:textColor="#2196F3"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/btnLargeOffsetPlus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="+0.5s"
+                android:textColor="#80FFFFFF"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- 底部控制条 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/btnLargePrev"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_circle_ripple"
+                android:padding="8dp"
+                android:src="@drawable/ic_skip_previous"
+                android:contentDescription="上一首" />
+
+            <ImageView
+                android:id="@+id/btnLargePlayPause"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/bg_circle_ripple"
+                android:padding="10dp"
+                android:src="@drawable/ic_play"
+                android:contentDescription="播放/暂停" />
+
+            <ImageView
+                android:id="@+id/btnLargeNext"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_circle_ripple"
+                android:padding="8dp"
+                android:src="@drawable/ic_skip_next"
+                android:contentDescription="下一首" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

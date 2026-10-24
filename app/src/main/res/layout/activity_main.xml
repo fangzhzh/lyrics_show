@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#12131A"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- 顶部标题栏 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_lyrics"
+                android:contentDescription="Logo" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="浮光歌词"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="实时悬浮与全屏歌词 · 轻量极简"
+                    android:textColor="#80FFFFFF"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 权限状态卡片 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:strokeColor="#242838"
+            app:strokeWidth="1dp"
+            app:cardBackgroundColor="#1A1C28">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="必要权限配置"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- 悬浮窗权限项 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <ImageView
+                        android:id="@+id/ivOverlayStatus"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_warning"
+                        android:contentDescription="状态" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="显示在其他应用上 (悬浮窗)"
+                            android:textColor="#E0E0E0"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tvOverlayHint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="用于在桌面与游戏上方展示歌词"
+                            android:textColor="#80FFFFFF"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnGrantOverlay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:text="去授权"
+                        android:textSize="12sp"
+                        app:cornerRadius="18dp"
+                        style="@style/Widget.Material3.Button.TonalButton" />
+                </LinearLayout>
+
+                <!-- 通知/媒体监听权限项 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/ivMediaStatus"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_warning"
+                        android:contentDescription="状态" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="通知与媒体监听权限"
+                            android:textColor="#E0E0E0"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tvMediaHint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="用于自动获取网易云/QQ音乐等播放进度"
+                            android:textColor="#80FFFFFF"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnGrantMedia"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:text="去授权"
+                        android:textSize="12sp"
+                        app:cornerRadius="18dp"
+                        style="@style/Widget.Material3.Button.TonalButton" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 核心操作控制卡片 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:strokeColor="#242838"
+            app:strokeWidth="1dp"
+            app:cardBackgroundColor="#1A1C28">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="快捷控制"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="14dp" />
+
+                <!-- 开启/关闭悬浮窗 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnToggleFloatingService"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:text="开启桌面悬浮歌词"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="26dp"
+                    app:backgroundTint="#2196F3"
+                    android:layout_marginBottom="10dp" />
+
+                <!-- 内置测试播放按钮 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnTestDemo"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="▶ 立即测试播放 (周杰伦-晴天)"
+                    android:textSize="14sp"
+                    app:cornerRadius="24dp"
+                    app:strokeColor="#42A5F5"
+                    app:strokeWidth="1dp"
+                    app:backgroundTint="#1E2738"
+                    android:textColor="#64B5F6"
+                    android:layout_marginBottom="10dp" />
+
+                <!-- 沉浸式全屏歌词按钮 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnOpenImmersive"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="🎵 打开沉浸式全屏歌词视窗"
+                    android:textSize="14sp"
+                    app:cornerRadius="24dp"
+                    app:backgroundTint="#232738"
+                    android:textColor="#E0E0E0" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 当前歌曲与歌词预览卡片 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:strokeColor="#242838"
+            app:strokeWidth="1dp"
+            app:cardBackgroundColor="#1A1C28">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="实时监控预览"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp" />
+
+                <TextView
+                    android:id="@+id/tvMainSongTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="尚未检测到播放中的音乐"
+                    android:textColor="#42A5F5"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvMainSongArtist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="打开手机音乐App（网易云/QQ音乐等）播放任意歌曲即可"
+                    android:textColor="#80FFFFFF"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="#222736" />
+
+                <TextView
+                    android:id="@+id/tvMainCurrentLyric"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="[ 当前无正在播放歌词 ]"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/tvMainNextLyric"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="#80FFFFFF"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+                <!-- 时间偏移微调 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="歌词快慢微调："
+                        android:textColor="#80FFFFFF"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:id="@+id/btnMainOffsetMinus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:text="-0.5s"
+                        android:textSize="11sp"
+                        style="@style/Widget.Material3.Button.TextButton" />
+
+                    <TextView
+                        android:id="@+id/tvMainOffset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="4dp"
+                        android:text="0.0s (复位)"
+                        android:textColor="#2196F3"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:id="@+id/btnMainOffsetPlus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:text="+0.5s"
+                        android:textSize="11sp"
+                        style="@style/Widget.Material3.Button.TextButton" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnMainManualSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="12dp"
+                    android:text="🔍 手动搜索 / 更换匹配歌词"
+                    android:textSize="13sp"
+                    app:cornerRadius="22dp"
+                    app:backgroundTint="#242838"
+                    android:textColor="#90CAF9" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</ScrollView>
