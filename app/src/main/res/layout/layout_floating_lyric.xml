@@ -163,15 +163,15 @@
                     android:ellipsize="end" />
             </LinearLayout>
 
-            <!-- 切换为一行模式 -->
+            <!-- 切换为一行模式 (还原/退出全屏) -->
             <ImageView
                 android:id="@+id/btnLargeToSingle"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:background="@drawable/bg_circle_ripple"
                 android:padding="6dp"
-                android:src="@drawable/ic_single_line"
-                android:contentDescription="切为一行模式" />
+                android:src="@drawable/ic_fullscreen_exit"
+                android:contentDescription="还原为一行模式" />
 
             <!-- 缩为小圈圈 -->
             <ImageView
